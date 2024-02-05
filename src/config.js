@@ -350,7 +350,7 @@ var projections = {
   "rectangularPolyconic": {n:"Rectangular Polyconic", arg:0, scale:160, ratio:1.65},
   "robinson": {n:"Robinson", arg:null, scale:160},
   "sinusoidal": {n:"Sinusoidal", arg:null, scale:160, ratio:2},
-  "stereographic": {n:"Stereographic", arg:null, scale:500, ratio:1.0, clip:true},
+  "stereographic": {n:"Stereographic", arg:null, scale:500, ratio:1.0, clip:true, f: function() { return d3.geoStereographic(); }, fRaw: function (x, y) { return d3.geoStereographicRaw( x, y ); }},
   "times": {n:"Times", arg:null, scale:210, ratio:1.4}, 
   "twoPointEquidistant": {n:"Two-Point Equidistant", arg:Math.PI/2, scale:320, ratio:1.15, clip:true},
   "vanDerGrinten": {n:"van Der Grinten", arg:null, scale:160, ratio:1.0}, 
