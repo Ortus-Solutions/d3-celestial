@@ -1,3 +1,6 @@
+import { geoZoom } from './lib/d3-geo-zoom';
+var d3 = require('./lib/d3.js');
+
 /* global module, require, topojson, settings, bvcolor, projections, projectionTween, poles, eulerAngles, euler, getAngles, transformDeg, getData, getPlanets, getPlanet, listConstellations, getConstellationList, getMwbackground, getGridValues, Canvas, halfπ, $, px, Round, has, hasCallback, isArray, isNumber, arrayfy, form, geo, fldEnable, setCenter, interpolateAngle, formats */
 var Celestial = {
   version: '0.7.35',
@@ -65,22 +68,22 @@ Celestial.display = function(config) {
   
   mapProjection = Celestial.projection(cfg.projection).rotate(rotation).translate([canvaswidth/2, canvasheight/2]).scale(scale * zoomlevel);
     
-  zoom = d3.geo.zoom().projection(mapProjection).center([canvaswidth/2, canvasheight/2]).scaleExtent([scale, scale * zoomextent]).on("zoom.redraw", redraw);
+  // zoom = d3.geo.zoom().projection(mapProjection).center([canvaswidth/2, canvasheight/2]).scaleExtent([scale, scale * zoomextent]).on("zoom.redraw", redraw);
   // Set initial zoom level
   scale *= zoomlevel;
 
   var canvas = d3.select(parentElement).selectAll("canvas"),
       culture = (cfg.culture !== "" && cfg.culture !== "iau") ? cfg.culture : "";
-  
-  if (canvas[0].length === 0) canvas = d3.select(parentElement).append("canvas");
+  if (canvas._groups[0].length === 0) canvas = d3.select(parentElement).append("canvas");
   //canvas.attr("width", width).attr("height", height);
   canvas.style("width", px(canvaswidth)).style("height", px(canvasheight)).attr("width", canvaswidth * pixelRatio).attr("height", canvasheight * pixelRatio);
   var context = canvas.node().getContext("2d");  
   context.setTransform(pixelRatio,0,0,pixelRatio,0,0);
 
-  var graticule = d3.geo.graticule().minorStep([15,10]);
+  var graticule = d3.geoGraticule().minorStep([15,10]);
   
-  map = d3.geo.path().projection(mapProjection).context(context);
+  zoom = geoZoom().projection(mapProjection).onMove(f => redraw())(canvas.node());
+  map = d3.geoPath().projection(mapProjection).context(context);
    
   //parent div with id #celestial-map or body
   if (container) container.selectAll(parentElement + " *").remove();
